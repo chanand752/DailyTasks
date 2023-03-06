@@ -1,0 +1,30 @@
+::ng-deep.p-tabmenu .p-tabmenu-nav {
+background-color: #00aae7;
+    border-color: none; 
+     color: #0a0c10;
+    padding-top: 0.2rem;
+    
+}
+
+::ng-deep.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+   background-color: transparent;
+   color: #ffffff;
+}
+
+::ng-deep.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+    background: #ffffff;
+   border-color:none;
+    color: #00aae7;
+    // margin: 5px;
+    // font-weight: 500;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+::ng-deep.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link:not(.p-disabled):focus {
+    outline: 0 none;
+    outline-offset: 0;
+     box-shadow: none; 
+     font-weight: 500;
+
+}
