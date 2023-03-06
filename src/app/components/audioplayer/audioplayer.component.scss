@@ -4,6 +4,19 @@
   
 }
 
+button {
+  min-width: 10rem;
+  margin-right: 0.5rem;
+}
+
+@media screen and (max-width: 960px) {
+  button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+
 // .video {
 //     padding: 20px; 
 // }

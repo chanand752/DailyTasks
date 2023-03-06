@@ -13,7 +13,7 @@
       #fileDropRef
       id="fileDropRef"
       multiple
-      (change)="onFileSelected($event, 'audio')" accept="audio/*"
+      (change)="onAudioFileSelected($event)" accept="audio/*"
     />
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -38,6 +38,47 @@
     <h3>or</h3>
     <label for="fileDropRef">Browse for file</label>
   </div>
+
+
+
+<div class="audio"> 
+  <h1 class="heading">If you have Audio URL Copy and Paste Below </h1>
+  <audio [src]="audioUrl" controls *ngIf="audioUrlTag"></audio> <br>
+<input type="text" [(ngModel)]="audioUrl" (input)="onAudioUrlChange($event)">
+
+</div>
+
+<p-toast position="bottom-center" key="c" (onClose)="onReject()" [baseZIndex]="5000">
+  <ng-template let-message pTemplate="message">
+      <div class="p-flex p-flex-column" style="flex: 1">
+          <div class="p-text-center">
+              <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+              <h4>{{message.summary}}</h4>
+              <p>{{message.detail}}</p>
+          </div>
+          <div class="p-grid p-fluid">
+              <div class="p-col-6">
+                  <button type="button" pButton (click)="onConfirm()" label="Yes" class="p-button-success"></button>
+              </div>
+              <div class="p-col-6">
+                  <button type="button" pButton (click)="onReject()" label="No" class="p-button-secondary"></button>
+              </div>
+          </div>
+      </div>
+  </ng-template>
+</p-toast>
+<button type="button" pButton pRipple (click)="showError()" label="Error" class="p-button-danger mb-2"></button>
+
+<!-- <h2>Audio File</h2>
+<input type="file" (change)="onAudioFileSelected($event)">
+<audio [src]="audioSrc" controls></audio> -->
+
+
+
+
+
+
+  
   <!-- <div class="files-list">
       <div class="single-file" *ngFor="let file of files; let i = index">
           <div class="file-icon" style="width: 50px">

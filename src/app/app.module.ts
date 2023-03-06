@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {ButtonModule} from 'primeng/button';
@@ -12,7 +12,9 @@ import { AudioplayerComponent } from './components/audioplayer/audioplayer.compo
 import { VideoplayerComponent } from './components/videoplayer/videoplayer.component';
 import { ProgressComponent } from './components/progress/progress.component';
 import { FormsModule } from '@angular/forms';
-
+import {ToastModule} from 'primeng/toast';
+import { RippleModule } from 'primeng/ripple';
+import {MessageService} from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -32,12 +34,14 @@ import { FormsModule } from '@angular/forms';
     TabMenuModule,
     MenuModule,
     FormsModule,
-   
+    ToastModule,
+    RippleModule,
+    BrowserAnimationsModule
     
 
 
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

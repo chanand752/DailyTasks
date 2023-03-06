@@ -11,7 +11,7 @@
       #fileDropRef
       id="fileDropRef"
       multiple
-      (change)="onFileSelected($event, 'video')" accept="video/*"
+      (change)="onVideoFileSelected($event)" accept="video/*"
     />
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -38,3 +38,13 @@
   </div>
   </div>
   
+  <div class="video">
+  <h1 class="heading">If you have Video URL Copy and Paste Below</h1>
+  <video [src]="videoUrl" controls *ngIf="videoUrlTag"></video> <br>
+  <input type="text" [(ngModel)]="videoUrl" (input)="onVideoUrlChange($event)">
+
+</div>
+  
+  <!-- <h2>Video File</h2>
+  <input type="file" (change)="onVideoFileSelected($event)">
+  <video [src]="videoSrc" controls></video> -->

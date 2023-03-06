@@ -4,6 +4,8 @@ import { AudioplayerComponent } from './components/audioplayer/audioplayer.compo
 import { VideoplayerComponent } from './components/videoplayer/videoplayer.component';
 
 const routes: Routes = [
+ 
+  { path: '', redirectTo: 'audioplayer',pathMatch: 'full',},
   {path:'videoplayer', component:VideoplayerComponent},
   {path:'audioplayer', component:AudioplayerComponent}
 ];

@@ -1,46 +1,76 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {MessageService} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-audioplayer',
   templateUrl: './audioplayer.component.html',
-  styleUrls: ['./audioplayer.component.scss']
+  styleUrls: ['./audioplayer.component.scss'],
+  providers: [MessageService]
 })
-export class AudioplayerComponent {
+export class AudioplayerComponent implements OnInit {
   audio :boolean = false;
   selectButton : boolean = false;
   browseButton : boolean = true;
 
   files: any[] = [];
 
+  audioUrl: string = '';
+  audioUrlTag : boolean = false;
+
   audioSrc!: SafeUrl;
   videoSrc!: SafeUrl;
-
-  constructor(private sanitizer: DomSanitizer) {}
-
  
 
-  onFileSelected(event: any, type: string) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = URL.createObjectURL(file);
-      if (type === 'audio') {
-        this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-      } else if (type === 'video') {
-        this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-      }
-      
-      else {
-        window.alert("invalid file")
-      }
+ 
+  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private primengConfig: PrimeNGConfig) {}
+ 
+    
 
-    };
-    reader.readAsDataURL(file);
-    this.audio = true;
-    this.selectButton = true;
-    this.browseButton = false;
+  ngOnInit() {
+    this.primengConfig.ripple = true;
   }
+
+  showError() {
+    this.messageService.add({severity:'error', summary: 'Error', detail: 'Message Content'});
+}
+
+onConfirm() {
+  this.messageService.clear('c');
+}
+
+onReject() {
+  this.messageService.clear('c');
+}
+  
+ 
+
+  // onFileSelected(event: any, type: string) {
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     const url = URL.createObjectURL(file);
+  //     if (type === 'audio') {
+  //       this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+  //     } else if (type === 'video') {
+  //       this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+  //     }
+      
+  //     else {
+  //       window.alert("invalid file")
+  //     }
+
+
+      
+
+  //   };
+  //   reader.readAsDataURL(file);
+  //   this.audio = true;
+  //   this.selectButton = true;
+  //   this.browseButton = false;
+  // }
+
 
   selectAnotherfile(){
     this.browseButton = true;
@@ -48,6 +78,34 @@ export class AudioplayerComponent {
     this.selectButton = false;
     
   }
+
+  onAudioUrlChange(event: any) {
+    this.audioUrl = event.target.value;
+    this.audioUrlTag = true;
+  }
+
+
+  onAudioFileSelected(event: any) {
+    const file = event.target.files[0];
+    const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
+    if (allowedTypes.includes(file.type)) {
+      alert("file uploaded successfully")
+    }
+    else if (!allowedTypes.includes(file.type)) {
+      alert('Invalid file type. Only audio files are allowed.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = URL.createObjectURL(file);
+      this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+    };
+    reader.readAsDataURL(file);
+    this.audio = true;
+      this.selectButton = true;
+      this.browseButton = false;
+  }
+
 
 
 
@@ -122,6 +180,38 @@ formatBytes(bytes:any, decimals:any) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+
+
+// filevaldation code
+
+
+
+
+
+// onAudioFileSelected(event: any) {
+//   const file = event.target.files[0];
+//   const reader = new FileReader();
+//   reader.onload = () => {
+//     const url = URL.createObjectURL(file);
+//     this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+//   };
+//   reader.readAsDataURL(file);
+// }
+
+// onVideoFileSelected(event: any) {
+//   const file = event.target.files[0];
+//   const reader = new FileReader();
+//   reader.onload = () => {
+//     const url = URL.createObjectURL(file);
+//     this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+//   };
+//   reader.readAsDataURL(file);
+// }
+
+
+
+
 
 
 

@@ -14,7 +14,7 @@ export class AppComponent {
 
   constructor() {
     this.items = [
-      {label: 'Audio Player', routerLink: ['/audioplayer']},
+      {label: 'Audio Player', routerLink: ['/audioplayer'] },
       {label: 'Video Player', routerLink: ['/videoplayer']},
       
   ];

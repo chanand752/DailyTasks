@@ -11,7 +11,8 @@ export class VideoplayerComponent implements OnInit {
   video : boolean = false;
   selectButton : boolean = false;
   browseButton : boolean = true;
-
+  videoUrl: string = '';
+  videoUrlTag : boolean = false;
   audioSrc!: SafeUrl;
   videoSrc!: SafeUrl;
   files: any[] = [];
@@ -20,28 +21,56 @@ export class VideoplayerComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  onFileSelected(event: any, type: string) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = URL.createObjectURL(file);
-      if (type === 'audio') {
-        this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-      } else if (type === 'video') {
-        this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-      }
-    };
-    reader.readAsDataURL(file);
-    this.video = true
-    this.selectButton = true
-    this.browseButton = false
-  }
+  // onFileSelected(event: any, type: string) {
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     const url = URL.createObjectURL(file);
+  //     if (type === 'audio') {
+  //       this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+  //     } else if (type === 'video') {
+  //       this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+  //     }
+  //   };
+  //   reader.readAsDataURL(file);
+  //   this.video = true
+  //   this.selectButton = true
+  //   this.browseButton = false
+  // }
 
   selectAnotherfile(){
     this.browseButton = true;
     this.video = false;
     this.selectButton = false;
     
+  }
+
+  onVideoUrlChange(event: any) {
+    this.videoUrl = event.target.value;
+    this.videoUrlTag = true;
+  }
+
+  onVideoFileSelected(event: any) {
+    const file = event.target.files[0];
+    const allowedTypes = ['video/mp4', 'video/quicktime', 'video/webm'];
+    if (allowedTypes.includes(file.type)) {
+      alert("file uploaded successfully")
+    }
+
+    else if (!allowedTypes.includes(file.type)) {
+      alert('Invalid file type. Only video files are allowed.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = URL.createObjectURL(file);
+      this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+    };
+    reader.readAsDataURL(file);
+
+    this.video = true
+    this.selectButton = true
+    this.browseButton = false
   }
 
 
