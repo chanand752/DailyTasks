@@ -36,6 +36,15 @@ video {
 }
 
 
+::ng-deep.p-inputgroup {
+  justify-content: center;
+  padding-top: 1.5rem;
+}
+::ng-deep.p-inputgroup-addon:last-child, .p-inputgroup button:last-child, .p-inputgroup input:last-child, .p-inputgroup > .p-inputwrapper:last-child > .p-component, .p-inputgroup > .p-inputwrapper:last-child > .p-component > .p-inputtext {
+   width: 20%;
+}
+
+
 // drag and drop css code
 
 .container {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-
+import {MessageService} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-videoplayer',
@@ -17,9 +18,10 @@ export class VideoplayerComponent implements OnInit {
   videoSrc!: SafeUrl;
   files: any[] = [];
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private primengConfig: PrimeNGConfig) {}
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true;
   }
   // onFileSelected(event: any, type: string) {
   //   const file = event.target.files[0];
@@ -54,11 +56,13 @@ export class VideoplayerComponent implements OnInit {
     const file = event.target.files[0];
     const allowedTypes = ['video/mp4', 'video/quicktime', 'video/webm'];
     if (allowedTypes.includes(file.type)) {
-      alert("file uploaded successfully")
+      // alert("file uploaded successfully")
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'file uploaded successfully'});
     }
 
     else if (!allowedTypes.includes(file.type)) {
-      alert('Invalid file type. Only video files are allowed.');
+      // alert('Invalid file type. Only video files are allowed.');
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only video files are allowed !!!!.'});
       return;
     }
     const reader = new FileReader();

@@ -6,8 +6,8 @@ import { PrimeNGConfig } from 'primeng/api';
 @Component({
   selector: 'app-audioplayer',
   templateUrl: './audioplayer.component.html',
-  styleUrls: ['./audioplayer.component.scss'],
-  providers: [MessageService]
+  styleUrls: ['./audioplayer.component.scss']
+
 })
 export class AudioplayerComponent implements OnInit {
   audio :boolean = false;
@@ -32,9 +32,9 @@ export class AudioplayerComponent implements OnInit {
     this.primengConfig.ripple = true;
   }
 
-  showError() {
-    this.messageService.add({severity:'error', summary: 'Error', detail: 'Message Content'});
-}
+//   showError() {
+//     this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file'});
+// }
 
 onConfirm() {
   this.messageService.clear('c');
@@ -89,10 +89,12 @@ onReject() {
     const file = event.target.files[0];
     const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
     if (allowedTypes.includes(file.type)) {
-      alert("file uploaded successfully")
+      // alert("file uploaded successfully")
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'file uploaded successfully'});
     }
     else if (!allowedTypes.includes(file.type)) {
-      alert('Invalid file type. Only audio files are allowed.');
+      // alert('Invalid file type. Only audio files are allowed.');
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
       return;
     }
     const reader = new FileReader();

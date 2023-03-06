@@ -41,9 +41,16 @@
   <div class="video">
   <h1 class="heading">If you have Video URL Copy and Paste Below</h1>
   <video [src]="videoUrl" controls *ngIf="videoUrlTag"></video> <br>
-  <input type="text" [(ngModel)]="videoUrl" (input)="onVideoUrlChange($event)">
+  <!-- <input type="text" [(ngModel)]="videoUrl" (input)="onVideoUrlChange($event)"> -->
+  <div>
+    <div class="p-inputgroup">
+        <span class="p-inputgroup-addon">www</span>
+        <input type="text" pInputText placeholder="URL Link" [(ngModel)]="videoUrl" (input)="onVideoUrlChange($event)">      
+    </div>
+  </div>
 
 </div>
+<p-toast></p-toast>
   
   <!-- <h2>Video File</h2>
   <input type="file" (change)="onVideoFileSelected($event)">
