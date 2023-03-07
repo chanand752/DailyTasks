@@ -22,7 +22,9 @@ export class VideoplayerComponent implements OnInit {
   showError: boolean = false;
 
 
-  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private primengConfig: PrimeNGConfig) {}
+  constructor(private sanitizer: DomSanitizer, 
+    private messageService: MessageService, 
+    private primengConfig: PrimeNGConfig) {}
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;
@@ -56,8 +58,6 @@ export class VideoplayerComponent implements OnInit {
    
     // this.iframeVideoUrlTag = true;
     // this.playVideo()
-
-
     
     // this.videoUrlTag = true;
   }
@@ -80,25 +80,7 @@ export class VideoplayerComponent implements OnInit {
       this.playNormalVideo(this.videoUrl);
     }
 
-   
-    // if (this.isValidUrl(this.videoUrl)) {
-    //   this.showError = false;
-    //   if (this.isYouTubeVideo(this.videoUrl)) {
-    //     this.iframeVideoUrlTag = true;
-    //     this.youtubeUrl = this.getEmbedUrl(this.videoUrl);
-    //     this.playYouTubeVideo();
-    //   } else {
-    //     this.iframeVideoUrlTag = true;
-    //     this.playNormalVideo();
-    //   }
-    // } else {
-    //   this.showError = true;
-
-    // }
-
-
-
-
+  
   }
 
   isYouTubeVideo(url: string) {
@@ -124,25 +106,6 @@ export class VideoplayerComponent implements OnInit {
   }
 
 
-
-
-  // onFileSelected(event: any, type: string) {
-  //   const file = event.target.files[0];
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     const url = URL.createObjectURL(file);
-  //     if (type === 'audio') {
-  //       this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-  //     } else if (type === 'video') {
-  //       this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-  //     }
-  //   };
-  //   reader.readAsDataURL(file);
-  //   this.video = true
-  //   this.selectButton = true
-  //   this.browseButton = false
-  // }
-
   selectAnotherfile(){
     this.browseButton = true;
     this.video = false;
@@ -150,7 +113,7 @@ export class VideoplayerComponent implements OnInit {
     
   }
 
- 
+
 
   onVideoFileSelected(event: any) {
     const file = event.target.files[0];
@@ -196,33 +159,9 @@ fileBrowseHandler(files: any[]):void {
   this.prepareFilesList(files);
 }
 
-/**
- * Delete file from files list
- * @param index (File index)
- */
-deleteFile(index: number) {
-  this.files.splice(index, 1);
-}
 
-/**
- * Simulate the upload process
- */
-uploadFilesSimulator(index: number) {
-  setTimeout(() => {
-    if (index === this.files.length) {
-      return;
-    } else {
-      const progressInterval = setInterval(() => {
-        if (this.files[index].progress === 100) {
-          clearInterval(progressInterval);
-          this.uploadFilesSimulator(index + 1);
-        } else {
-          this.files[index].progress += 5;
-        }
-      }, 200);
-    }
-  }, 1000);
-}
+
+
 
 /**
  * Convert Files list to normal array list
@@ -233,28 +172,94 @@ prepareFilesList(files: Array<any>) {
     item.progress = 0;
     this.files.push(item);
   }
-  this.uploadFilesSimulator(0);
+  // this.uploadFilesSimulator(0);
 }
+
+
+// onFileSelected(event: any, type: string) {
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     const url = URL.createObjectURL(file);
+  //     if (type === 'audio') {
+  //       this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+  //     } else if (type === 'video') {
+  //       this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+  //     }
+  //   };
+  //   reader.readAsDataURL(file);
+  //   this.video = true
+  //   this.selectButton = true
+  //   this.browseButton = false
+  // }
+
+
+  // if (this.isValidUrl(this.videoUrl)) {
+    //   this.showError = false;
+    //   if (this.isYouTubeVideo(this.videoUrl)) {
+    //     this.iframeVideoUrlTag = true;
+    //     this.youtubeUrl = this.getEmbedUrl(this.videoUrl);
+    //     this.playYouTubeVideo();
+    //   } else {
+    //     this.iframeVideoUrlTag = true;
+    //     this.playNormalVideo();
+    //   }
+    // } else {
+    //   this.showError = true;
+
+    // }
+
+
+
+
+
+
+
 
 /**
  * format bytes
  * @param bytes (File size in bytes)
  * @param decimals (Decimals point)
  */
-formatBytes(bytes: number,decimals: number) {
-  if (bytes === 0) {
-    return '0 Bytes';
-  }
-  const k = 1024;
-  const dm = decimals <= 0 ? 0 : decimals || 2;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
+// formatBytes(bytes: number,decimals: number) {
+//   if (bytes === 0) {
+//     return '0 Bytes';
+//   }
+//   const k = 1024;
+//   const dm = decimals <= 0 ? 0 : decimals || 2;
+//   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+//   const i = Math.floor(Math.log(bytes) / Math.log(k));
+//   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+// }
+
+/**
+ * Delete file from files list
+ * @param index (File index)
+ */
 
 
-
-
+// deleteFile(index: number) {
+//   this.files.splice(index, 1);
+// }
+/**
+ * Simulate the upload process
+ */
+// uploadFilesSimulator(index: number) {
+//   setTimeout(() => {
+//     if (index === this.files.length) {
+//       return;
+//     } else {
+//       const progressInterval = setInterval(() => {
+//         if (this.files[index].progress === 100) {
+//           clearInterval(progressInterval);
+//           this.uploadFilesSimulator(index + 1);
+//         } else {
+//           this.files[index].progress += 5;
+//         }
+//       }, 200);
+//     }
+//   }, 1000);
+// }
 
 
 }
