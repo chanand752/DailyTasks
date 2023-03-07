@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import {ToastModule} from 'primeng/toast';
 import { RippleModule } from 'primeng/ripple';
 import {MessageService} from 'primeng/api';
+import { SafePipe } from './safe.pipe';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {MessageService} from 'primeng/api';
     AudioplayerComponent,
     VideoplayerComponent,
     ProgressComponent,
+    SafePipe,
 
     
   ],
@@ -36,12 +38,12 @@ import {MessageService} from 'primeng/api';
     FormsModule,
     ToastModule,
     RippleModule,
-    BrowserAnimationsModule
-    
-
-
+    BrowserAnimationsModule,
   ],
-  providers: [MessageService],
-  bootstrap: [AppComponent]
+  exports: [
+    SafePipe
+  ],
+  providers: [MessageService,  ],
+  bootstrap: [AppComponent,]
 })
 export class AppModule { }

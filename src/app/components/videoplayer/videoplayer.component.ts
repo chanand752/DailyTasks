@@ -14,15 +14,118 @@ export class VideoplayerComponent implements OnInit {
   browseButton : boolean = true;
   videoUrl: string = '';
   videoUrlTag : boolean = false;
+  iframeVideoUrlTag :boolean = false;
   audioSrc!: SafeUrl;
   videoSrc!: SafeUrl;
   files: any[] = [];
+  videoId : any;
+  showError: boolean = false;
+
 
   constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private primengConfig: PrimeNGConfig) {}
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;
+
   }
+
+
+  getVideoId() {
+    let videoId = this.videoUrl.split('v=')[1];
+    const ampersandPosition = videoId.indexOf('&');
+    if (ampersandPosition !== -1) {
+      videoId = videoId.substring(0, ampersandPosition);
+    }
+    this.videoId = videoId;
+  }
+
+  onVideoUrlChange(){
+
+    if (this.validateNormalVideoUrl(this.videoUrl)) {
+      this.iframeVideoUrlTag = true;
+      this.playVideo()
+      // this.videoUrl = '';
+   
+    } else if (this.validateYoutubeVideoUrl(this.videoUrl)) {
+      this.iframeVideoUrlTag = true;
+      this.playVideo()
+      
+    } else {
+      alert('Invalid video URL');
+    }
+   
+    // this.iframeVideoUrlTag = true;
+    // this.playVideo()
+
+
+    
+    // this.videoUrlTag = true;
+  }
+
+
+  validateNormalVideoUrl(url: string) {
+    return url.match(/\.(mp4|webm|ogg)$/) != null;
+  }
+
+  validateYoutubeVideoUrl(url: string) {
+    return url.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/);
+  }
+
+
+
+  playVideo() {
+    if (this.isYouTubeVideo(this.videoUrl)) {
+      this.playYouTubeVideo(this.videoUrl);
+    } else {
+      this.playNormalVideo(this.videoUrl);
+    }
+
+   
+    // if (this.isValidUrl(this.videoUrl)) {
+    //   this.showError = false;
+    //   if (this.isYouTubeVideo(this.videoUrl)) {
+    //     this.iframeVideoUrlTag = true;
+    //     this.youtubeUrl = this.getEmbedUrl(this.videoUrl);
+    //     this.playYouTubeVideo();
+    //   } else {
+    //     this.iframeVideoUrlTag = true;
+    //     this.playNormalVideo();
+    //   }
+    // } else {
+    //   this.showError = true;
+
+    // }
+
+
+
+
+  }
+
+  isYouTubeVideo(url: string) {
+    return url.indexOf('youtube.com') !== -1 || url.indexOf('youtu.be') !== -1;
+  }
+
+  playYouTubeVideo(url: string) {
+    let videoId = this.videoUrl.split('v=')[1];
+    const ampersandPosition = videoId.indexOf('&');
+    if (ampersandPosition !== -1) {
+      videoId = videoId.substring(0, ampersandPosition);
+    }
+    const youtubeUrl = `https://www.youtube.com/embed/${videoId}`;
+    const videoPlayer = document.getElementById('video-player') as HTMLIFrameElement;
+    videoPlayer.src = youtubeUrl;
+  }
+
+  playNormalVideo(url: string) {
+    const videoPlayer = document.getElementById('video-player') as HTMLVideoElement;
+  videoPlayer.src = this.videoUrl;
+  videoPlayer.load();
+  videoPlayer.play();
+  }
+
+
+
+
   // onFileSelected(event: any, type: string) {
   //   const file = event.target.files[0];
   //   const reader = new FileReader();
@@ -47,10 +150,7 @@ export class VideoplayerComponent implements OnInit {
     
   }
 
-  onVideoUrlChange(event: any) {
-    this.videoUrl = event.target.value;
-    this.videoUrlTag = true;
-  }
+ 
 
   onVideoFileSelected(event: any) {
     const file = event.target.files[0];
@@ -69,6 +169,7 @@ export class VideoplayerComponent implements OnInit {
     reader.onload = () => {
       const url = URL.createObjectURL(file);
       this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+      
     };
     reader.readAsDataURL(file);
 
@@ -85,6 +186,7 @@ export class VideoplayerComponent implements OnInit {
    */
  onFileDropped($event: any) {
   this.prepareFilesList($event);
+  
 }
 
 /**
@@ -149,6 +251,10 @@ formatBytes(bytes: number,decimals: number) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+
+
+
 
 
 }

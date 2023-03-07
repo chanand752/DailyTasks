@@ -40,18 +40,25 @@
   
   <div class="video">
   <h1 class="heading">If you have Video URL Copy and Paste Below</h1>
-  <video [src]="videoUrl" controls *ngIf="videoUrlTag"></video> <br>
-  <!-- <input type="text" [(ngModel)]="videoUrl" (input)="onVideoUrlChange($event)"> -->
+  <video [src]="videoUrl | safe" controls *ngIf="videoUrlTag" id="video-player"></video> <br>
+  <iframe [src]="videoUrl | safe" frameborder="0"  width="700" height="400" id="video-player" *ngIf="iframeVideoUrlTag"></iframe><br>
   <div>
-    <div class="p-inputgroup">
-        <span class="p-inputgroup-addon">www</span>
-        <input type="text" pInputText placeholder="URL Link" [(ngModel)]="videoUrl" (input)="onVideoUrlChange($event)">      
+    <div style="padding-top: 1rem;" *ngIf="iframeVideoUrlTag"> 
+      <button pButton pRipple type="button" label="Play Video" class="p-button-rounded"  (click)="playVideo()"></button>
     </div>
-  </div>
+    <div class="p-inputgroup">
+        <span class="p-inputgroup-addon">www</span> 
+        <input type="text" pInputText placeholder="URL Link" [(ngModel)]="videoUrl" (input)="onVideoUrlChange()" >    
+    </div>
+   
+  </div>  
 
 </div>
+
+
+
+
+
 <p-toast></p-toast>
   
-  <!-- <h2>Video File</h2>
-  <input type="file" (change)="onVideoFileSelected($event)">
-  <video [src]="videoSrc" controls></video> -->
+  

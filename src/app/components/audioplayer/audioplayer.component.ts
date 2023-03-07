@@ -21,7 +21,7 @@ export class AudioplayerComponent implements OnInit {
 
   audioSrc!: SafeUrl;
   videoSrc!: SafeUrl;
- 
+  ext: string = '';
 
  
   constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private primengConfig: PrimeNGConfig) {}
@@ -83,6 +83,37 @@ onReject() {
     this.audioUrl = event.target.value;
     this.audioUrlTag = true;
   }
+
+
+  // onAudioUrlChange(event: any) {
+  //   const url = event.target.value;
+  //   if (!this.isValidAudioUrl(url)) {
+  //     alert('Invalid audio URL.');
+  //     this.audioUrl = '';
+  //   }
+  // }
+  
+  // onVideoUrlChange(event: any) {
+  //   const url = event.target.value;
+  //   if (!this.isValidVideoUrl(url)) {
+  //     alert('Invalid video URL.');
+  //     this.videoUrl = '';
+  //   }
+  // }
+  
+  // isValidAudioUrl(url: string): boolean {
+  //   const audioTypes = ['mp3', 'wav', 'ogg'];
+  //    const urlType = url.split('.').pop();
+  //   return audioTypes.includes(this.ext);
+  // }
+  
+  // isValidVideoUrl(url: string): boolean {
+  //   const videoTypes = ['mp4', 'mov', 'webm'];
+  //   const ext = url.split('.').pop();
+  //   return videoTypes.includes(ext);
+  // }
+  
+
 
 
   onAudioFileSelected(event: any) {
@@ -191,25 +222,6 @@ formatBytes(bytes:any, decimals:any) {
 
 
 
-// onAudioFileSelected(event: any) {
-//   const file = event.target.files[0];
-//   const reader = new FileReader();
-//   reader.onload = () => {
-//     const url = URL.createObjectURL(file);
-//     this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-//   };
-//   reader.readAsDataURL(file);
-// }
-
-// onVideoFileSelected(event: any) {
-//   const file = event.target.files[0];
-//   const reader = new FileReader();
-//   reader.onload = () => {
-//     const url = URL.createObjectURL(file);
-//     this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-//   };
-//   reader.readAsDataURL(file);
-// }
 
 
 
