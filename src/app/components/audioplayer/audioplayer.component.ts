@@ -34,6 +34,7 @@ fileSizeInBytes: any;
   uploadedFiles: File[] = [];
   dragOver = false;
 fileName: any;
+formattedFileSize :any;
 namedFile:boolean = false;
 
 
@@ -119,7 +120,11 @@ namedFile:boolean = false;
       reader.readAsDataURL(files[0]);
   
       this.fileName = files[0].name;
+      const fileSize = files[0].size;
+     this.formattedFileSize = this.formatFileSize(fileSize);
+    // console.log('File size:', this.formattedFileSize);
     } else {
+      this.audioSrc = '';
       this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
       return;
     }
@@ -127,6 +132,18 @@ namedFile:boolean = false;
       this.selectButton = true;
       this.namedFile = true
       this.browseButton = false;
+  }
+
+  formatFileSize(fileSize: number): string {
+    if (fileSize < 1024) {
+      return fileSize + ' bytes';
+    } else if (fileSize < 1024 * 1024) {
+      return (fileSize / 1024).toFixed(2) + ' KB';
+    } else if (fileSize < 1024 * 1024 * 1024) {
+      return (fileSize / (1024 * 1024)).toFixed(2) + ' MB';
+    } else {
+      return (fileSize / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
   }
 
   playAudioFile(){
@@ -161,6 +178,7 @@ onFileDroppedNew(event: any) {
 
     this.fileName = files[0].name;
   } else {
+    this.audioSrc = '';
     this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
     return;
   }

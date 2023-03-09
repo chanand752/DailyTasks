@@ -24,6 +24,7 @@ export class VideoplayerComponent implements OnInit {
   fileName: any;
   playVideoFileButton: boolean = false;
   namedFile: boolean = false;
+  formattedFileSize: any;
 
 
   constructor(private sanitizer: DomSanitizer, 
@@ -162,6 +163,9 @@ export class VideoplayerComponent implements OnInit {
       reader.readAsDataURL(files[0]);
   
       this.fileName = files[0].name;
+      const fileSize = files[0].size;
+      this.formattedFileSize = this.formatFileSize(fileSize);
+     // console.log('File size:', this.formattedFileSize);
     } else {
       this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
       return;
@@ -171,6 +175,18 @@ export class VideoplayerComponent implements OnInit {
     this.selectButton = true
     this.browseButton = false
     this.namedFile = true
+  }
+
+  formatFileSize(fileSize: number): string {
+    if (fileSize < 1024) {
+      return fileSize + ' bytes';
+    } else if (fileSize < 1024 * 1024) {
+      return (fileSize / 1024).toFixed(2) + ' KB';
+    } else if (fileSize < 1024 * 1024 * 1024) {
+      return (fileSize / (1024 * 1024)).toFixed(2) + ' MB';
+    } else {
+      return (fileSize / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
   }
 
 
