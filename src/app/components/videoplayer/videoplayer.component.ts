@@ -15,11 +15,15 @@ export class VideoplayerComponent implements OnInit {
   videoUrl: string = '';
   videoUrlTag : boolean = false;
   iframeVideoUrlTag :boolean = false;
+  playVideoButton :boolean = false;
   audioSrc!: SafeUrl;
   videoSrc!: SafeUrl;
   files: any[] = [];
   videoId : any;
   showError: boolean = false;
+  fileName: any;
+  playVideoFileButton: boolean = false;
+  namedFile: boolean = false;
 
 
   constructor(private sanitizer: DomSanitizer, 
@@ -43,20 +47,31 @@ export class VideoplayerComponent implements OnInit {
 
   onVideoUrlChange(){
 
-    if (this.validateNormalVideoUrl(this.videoUrl)) {
-      this.iframeVideoUrlTag = true;
-      this.playVideo()
-      // this.videoUrl = '';
+    // if (this.validateNormalVideoUrl(this.videoUrl)) {
+    //   this.messageService.add({severity:'success', summary: 'Success', detail: 'URL uploaded successfully'});
+    //   this.iframeVideoUrlTag = true;
+    //   this.playVideo()
+  
    
-    } else if (this.validateYoutubeVideoUrl(this.videoUrl)) {
-      this.iframeVideoUrlTag = true;
-      this.playVideo()
+    // } else if (this.validateYoutubeVideoUrl(this.videoUrl)) {
+    //   this.messageService.add({severity:'success', summary: 'Success', detail: 'URL uploaded successfully'});
+    //   this.iframeVideoUrlTag = true;
+    //   this.playVideo()
+     
       
-    } else {
-      alert('Invalid video URL');
-    }
+    // } else {
+    //   this.iframeVideoUrlTag = false;
+    //   this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid video URL. Only valid video URL allowed !!!!.'});
+    //   return;
+    // }
    
-    // this.iframeVideoUrlTag = true;
+    this.iframeVideoUrlTag = true;
+    this.playVideoButton = true
+
+    if(this.videoUrl === '') {
+      this.iframeVideoUrlTag = false;
+      this.playVideoButton = false
+    }
     // this.playVideo()
     
     // this.videoUrlTag = true;
@@ -74,10 +89,27 @@ export class VideoplayerComponent implements OnInit {
 
 
   playVideo() {
-    if (this.isYouTubeVideo(this.videoUrl)) {
+    if (this.isYouTubeVideo(this.videoUrl) && this.validateYoutubeVideoUrl(this.videoUrl) || this.validateNormalVideoUrl(this.videoUrl) ) {
       this.playYouTubeVideo(this.videoUrl);
-    } else {
-      this.playNormalVideo(this.videoUrl);
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'URL uploaded successfully'});
+      this.iframeVideoUrlTag = true;
+      this.playVideoButton = true
+      
+    } 
+    
+    else if (!this.isYouTubeVideo(this.videoUrl) && this.validateNormalVideoUrl(this.videoUrl)) {
+      this.playYouTubeVideo(this.videoUrl);
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'URL uploaded successfully'});
+      this.iframeVideoUrlTag = true;
+      this.playVideoButton = true
+   
+    }
+    
+    else {
+      this.iframeVideoUrlTag = false;
+      this.playVideoButton = false
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid video URL. Only valid video URL allowed !!!!.'});
+      return;
     }
 
   
@@ -110,37 +142,73 @@ export class VideoplayerComponent implements OnInit {
     this.browseButton = true;
     this.video = false;
     this.selectButton = false;
+    this.namedFile = false;
     
   }
 
 
 
   onVideoFileSelected(event: any) {
-    const file = event.target.files[0];
+    const files = event.target.files;
     const allowedTypes = ['video/mp4', 'video/quicktime', 'video/webm'];
-    if (allowedTypes.includes(file.type)) {
-      // alert("file uploaded successfully")
+  
+    if (allowedTypes.includes(files[0].type)) {
       this.messageService.add({severity:'success', summary: 'Success', detail: 'file uploaded successfully'});
-    }
-
-    else if (!allowedTypes.includes(file.type)) {
-      // alert('Invalid file type. Only video files are allowed.');
-      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only video files are allowed !!!!.'});
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = URL.createObjectURL(files[0]);
+        this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+      };
+      reader.readAsDataURL(files[0]);
+  
+      this.fileName = files[0].name;
+    } else {
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = URL.createObjectURL(file);
-      this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-      
-    };
-    reader.readAsDataURL(file);
-
-    this.video = true
+    
+    // this.video = true
     this.selectButton = true
     this.browseButton = false
+    this.namedFile = true
   }
 
+
+
+  onFileDroppedNew(event: any) {
+    const files = event.dataTransfer.files;
+    const allowedTypes = ['video/mp4', 'video/quicktime', 'video/webm'];
+  
+    if (allowedTypes.includes(files[0].type)) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = URL.createObjectURL(files[0]);
+        this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+      };
+      reader.readAsDataURL(files[0]);
+  
+      this.fileName = files[0].name;
+    } else {
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
+      return;
+    }
+  }
+
+
+
+  onDeleteFile() {
+    this.fileName = '';
+    this.audioSrc = '';
+    this.video = false
+    this.playVideoFileButton = false;
+    this.selectButton = false;
+    this.browseButton = true;
+    this.namedFile = false;
+  }
+
+  playVideoFile() {
+    this.video = true;
+  }
 
   // Drag and drop down code
 

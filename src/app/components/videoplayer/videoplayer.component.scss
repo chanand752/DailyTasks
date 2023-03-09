@@ -20,7 +20,18 @@ video {
 .heading {
     color: #00aae7;
 }
-
+.nameFile {
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
+  width: 450px;
+  height: 270px;
+  padding: 2rem;
+  text-align: center;
+  border: dashed 1px #979797;
+  // position: relative;
+  margin: 0 auto;
+}
 
 .selectButton{
   color: white;

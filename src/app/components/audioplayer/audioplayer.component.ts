@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {MessageService} from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-
+interface File {
+  type: string;
+  name: string;
+  size: number;
+  extension?: string;
+}
 @Component({
   selector: 'app-audioplayer',
   templateUrl: './audioplayer.component.html',
@@ -13,6 +18,9 @@ export class AudioplayerComponent implements OnInit {
   audio :boolean = false;
   selectButton : boolean = false;
   browseButton : boolean = true;
+  playAudioButton:boolean = false;
+  playAudiioFileButton : boolean = false;
+  deleteIocn : boolean = false;
 
   files: any[] = [];
 
@@ -22,6 +30,12 @@ export class AudioplayerComponent implements OnInit {
   audioSrc!: SafeUrl;
   videoSrc!: SafeUrl;
   ext: string = '';
+fileSizeInBytes: any;
+  uploadedFiles: File[] = [];
+  dragOver = false;
+fileName: any;
+namedFile:boolean = false;
+
 
  
   constructor(private sanitizer: DomSanitizer, private messageService: MessageService,
@@ -38,188 +52,181 @@ export class AudioplayerComponent implements OnInit {
     this.browseButton = true;
     this.audio = false;
     this.selectButton = false;
+    this.namedFile = false;
     
   }
 
   onAudioUrlChange(event: any) {
     this.audioUrl = event.target.value;
-    this.audioUrlTag = true;
     if(this.audioUrl === '') {
+      this.playAudioButton = false;
       this.audioUrlTag = false;
+      
+    }
+
+    this.playAudioButton = true
+   
+   
+  }
+
+  
+
+  playAudio() {
+    const isValid = this.isValidAudioUrl(this.audioUrl);
+    if (isValid) {
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'Valid URL Click on Play to listen audio !!!'});
+      // alert("valid url play audio")
+      this.audioUrlTag = true;
+    } else {
+      this.audioUrlTag = false;
+      this.playAudioButton = false
+
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid URL. Only audio URL are allowed !!!!.'});
+      
+    }
+
+   
+  }
+
+
+
+  isValidAudioUrl(audioUrl: string): boolean {
+    const audioExtensions = ['mp3', 'wav', 'ogg']; // Add more extensions if needed
+    const extension = audioUrl.split('.').pop();
+    if (audioExtensions.includes(extension!.toLowerCase())) {
+      return true;
+    } else {
+      
+      return false;
     }
   }
+
 
 
 // file select method calling
 
   onAudioFileSelected(event: any) {
-    const file = event.target.files[0];
+    const files = event.target.files;
     const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
-    if (allowedTypes.includes(file.type)) {
-      // alert("file uploaded successfully")
+  
+    if (allowedTypes.includes(files[0].type)) {
       this.messageService.add({severity:'success', summary: 'Success', detail: 'file uploaded successfully'});
-    }
-    else if (!allowedTypes.includes(file.type)) {
-      // alert('Invalid file type. Only audio files are allowed.');
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = URL.createObjectURL(files[0]);
+        this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+      };
+      reader.readAsDataURL(files[0]);
+  
+      this.fileName = files[0].name;
+    } else {
       this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = URL.createObjectURL(file);
-      this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-    };
-    reader.readAsDataURL(file);
-    this.audio = true;
+      // this.audio = true;
       this.selectButton = true;
+      this.namedFile = true
       this.browseButton = false;
   }
 
-
-
-// Drag and drop down code
-
- /**
-   * on file drop handler
-   */
- onFileDropped($event: any) {
-  this.prepareFilesList($event);
-}
-
-/**
- * handle file from browsing
- */
-fileBrowseHandler(files: any[]):void {
-  this.prepareFilesList(files);
-}
-
-/**
- * Convert Files list to normal array list
- * @param files (Files List)
- */
-prepareFilesList(files: Array<any>) {
-  for (const item of files) {
-    item.progress = 0;
-    this.files.push(item);
+  playAudioFile(){
+   this.audio = true
   }
-  // this.uploadFilesSimulator(0);
+
+
+onFilesSelected(event: any) {
+  const files = event.target.files;
+  console.log(event)
+  this.handleFiles(files);
+}
+
+// onFileDroppedNew(event: any) {
+//   const files = event.dataTransfer.files;
+//   console.log(event)
+//   this.handleFiles(files);
+
+// }
+
+onFileDroppedNew(event: any) {
+  const files = event.dataTransfer.files;
+  const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
+
+  if (allowedTypes.includes(files[0].type)) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = URL.createObjectURL(files[0]);
+      this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
+    };
+    reader.readAsDataURL(files[0]);
+
+    this.fileName = files[0].name;
+  } else {
+    this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file type. Only audio files are allowed !!!!.'});
+    return;
+  }
 }
 
 
 
-
-/**
- * Simulate the upload process
- */
-// uploadFilesSimulator(index: number) {
-//   setTimeout(() => {
-//     if (index === this.files.length) {
-//       return;
-//     } else {
-//       const progressInterval = setInterval(() => {
-//         if (this.files[index].progress === 100) {
-//           clearInterval(progressInterval);
-//           this.uploadFilesSimulator(index + 1);
-//         } else {
-//           this.files[index].progress += 5;
-//         }
-//       }, 200);
-//     }
-//   }, 1000);
-// }
-/**
- * Delete file from files list
- * @param index (File index)
- */
-// deleteFile(index: number) {
-//   this.files.splice(index, 1);
-// }
-
-// /**
-//  * format bytes
-//  * @param bytes (File size in bytes)
-//  * @param decimals (Decimals point)
-//  */
-// formatBytes(bytes:any, decimals:any) {
-//   if (bytes === 0) {
-//     return '0 Bytes';
-//   }
-//   const k = 1024;
-//   const dm = decimals <= 0 ? 0 : decimals || 2;
-//   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-//   const i = Math.floor(Math.log(bytes) / Math.log(k));
-//   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-// }
-
-
-
-// filevaldation code
-
-
-
-//   showError() {
-//     this.messageService.add({severity:'error', summary: 'Error', detail: 'Invalid file'});
-// }
-
-  // onFileSelected(event: any, type: string) {
-  //   const file = event.target.files[0];
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     const url = URL.createObjectURL(file);
-  //     if (type === 'audio') {
-  //       this.audioSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-  //     } else if (type === 'video') {
-  //       this.videoSrc = this.sanitizer.bypassSecurityTrustUrl(url);
-  //     }
-      
-  //     else {
-  //       window.alert("invalid file")
-  //     }
-
-
-      
-
-  //   };
-  //   reader.readAsDataURL(file);
-  //   this.audio = true;
-  //   this.selectButton = true;
-  //   this.browseButton = false;
-  // }
-
-
-  // onAudioUrlChange(event: any) {
-  //   const url = event.target.value;
-  //   if (!this.isValidAudioUrl(url)) {
-  //     alert('Invalid audio URL.');
-  //     this.audioUrl = '';
-  //   }
-  // }
+handleFiles(files: FileList) {
   
-  // onVideoUrlChange(event: any) {
-  //   const url = event.target.value;
-  //   if (!this.isValidVideoUrl(url)) {
-  //     alert('Invalid video URL.');
-  //     this.videoUrl = '';
-  //   }
-  // }
+  const fileList = Array.from(files); // Convert FileList to an array
+  for (const file of fileList) {
+    if (!this.validateFile(file)) {
+      alert('Invalid file type. Only image files are allowed.');
+      return;
+    }
+    this.uploadedFiles.push(file);
+  }
+}
+
+onDelete(file: File) {
+  const index = this.uploadedFiles.indexOf(file);
+  if (index !== -1) {
+    this.uploadedFiles.splice(index, 1);
+  }
+}
+
+onDeleteFile() {
+  this.fileName = '';
+  this.audioSrc = '';
+  this.audio = false
+  this.playAudiioFileButton = false;
+  this.selectButton = false;
+  this.browseButton = true;
+  this.namedFile = false;
+}
+
+private validateFile(file: File): boolean {
+  const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
+  if (!allowedTypes.includes(file.type)) {
+    return false;
+  }
+  return true;
   
-  // isValidAudioUrl(url: string): boolean {
-  //   const audioTypes = ['mp3', 'wav', 'ogg'];
-  //    const urlType = url.split('.').pop();
-  //   return audioTypes.includes(this.ext);
-  // }
-  
-  // isValidVideoUrl(url: string): boolean {
-  //   const videoTypes = ['mp4', 'mov', 'webm'];
-  //   const ext = url.split('.').pop();
-  //   return videoTypes.includes(ext);
-  // }
-  
+}
 
+onDragOver(event: any) {
+  event.preventDefault();
+  this.dragOver = true;
+}
 
+onDragLeave(event: any) {
+  event.preventDefault();
+  this.dragOver = false;
+}
 
+onDrop(event: any) {
+  event.preventDefault();
+  this.dragOver = false;
+  const files = event.dataTransfer.files;
+  this.handleFiles(files);
 
-
+  // Show file name and size
+  for (const file of files) {
+    console.log(`File name: ${file.name}, File size: ${file.size} bytes`);
+  }
+}
 
 
 

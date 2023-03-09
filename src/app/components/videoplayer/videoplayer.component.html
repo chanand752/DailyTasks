@@ -2,7 +2,7 @@
 <div class="video"> 
     <h1 class="heading">Select your Video Files and Watch the Video</h1>
     <video [src]="videoSrc" controls *ngIf="video"></video> <br>
-    <button class="selectButton" *ngIf="selectButton" (click)="selectAnotherfile()">Browse another video file</button>
+   <button pButton pRipple type="button" label="Play Video" class="p-button-rounded" (click)="playVideoFile()" *ngIf="selectButton"></button>
   <!-- <input type="file" (change)="onFileSelected($event, 'video')" accept="video/*"> -->
 
   <div class="container" appDnd (fileDropped)="onFileDropped($event)" *ngIf="browseButton">
@@ -37,25 +37,42 @@
     <label for="fileDropRef">Browse for file</label>
   </div>
   </div>
+
+  <div *ngIf="namedFile"  class="nameFile">
+    
+    <div> 
+    <p class="file-name">{{ fileName }}</p>
+    <div class="delete" (click)="onDeleteFile()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+        <path fill="#d9341e" fill-rule="nonzero"
+          d="M1 16c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v10zm3.17-7.83a.996.996 0 0 1 1.41 0L7 9.59l1.42-1.42a.996.996 0 1 1 1.41 1.41L8.41 11l1.42 1.42a.996.996 0 1 1-1.41 1.41L7 12.41l-1.42 1.42a.996.996 0 1 1-1.41-1.41L5.59 11 4.17 9.58a.996.996 0 0 1 0-1.41zM10.5 1L9.79.29C9.61.11 9.35 0 9.09 0H4.91c-.26 0-.52.11-.7.29L3.5 1H1c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1h-2.5z" />
+      </svg>
+    </div>
+    <button class="selectButton"  (click) ="selectAnotherfile()">Browse another audio file</button>
+  </div>
+  </div>
+
+
+
   
   <div class="video">
   <h1 class="heading">If you have Video URL Copy and Paste Below</h1>
   <video [src]="videoUrl | safe" controls *ngIf="videoUrlTag" id="video-player"></video> <br>
   <iframe [src]="videoUrl | safe" frameborder="0"  width="700" height="400" id="video-player" *ngIf="iframeVideoUrlTag"></iframe><br>
   <div>
-    <div style="padding-top: 1rem;" *ngIf="iframeVideoUrlTag"> 
+    <div style="padding-top: 1rem;" *ngIf="playVideoButton"> 
       <button pButton pRipple type="button" label="Play Video" class="p-button-rounded"  (click)="playVideo()"></button>
     </div>
     <div class="p-inputgroup">
         <span class="p-inputgroup-addon">www</span> 
-        <input type="text" pInputText placeholder="URL Link" [(ngModel)]="videoUrl" (input)="onVideoUrlChange()" >    
+        <input type="text" pInputText placeholder="URL Link" [(ngModel)]="videoUrl" (input)="onVideoUrlChange()">    
     </div>
    
   </div>  
 
 </div>
 
-
+<!-- (input)="onVideoUrlChange()" -->
 
 
 

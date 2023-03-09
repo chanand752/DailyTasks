@@ -23,13 +23,20 @@ button {
 ::ng-deep.p-inputgroup-addon:last-child, .p-inputgroup button:last-child, .p-inputgroup input:last-child, .p-inputgroup > .p-inputwrapper:last-child > .p-component, .p-inputgroup > .p-inputwrapper:last-child > .p-component > .p-inputtext {
    width: 20%;
 }
-// .video {
-//     padding: 20px; 
-// }
 
-// input {
-//     padding-top: 10px;
-// }
+
+.nameFile {
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
+  width: 450px;
+  height: 270px;
+  padding: 2rem;
+  text-align: center;
+  border: dashed 1px #979797;
+  // position: relative;
+  margin: 0 auto;
+}
 
 video {
     width: 75%;
@@ -50,6 +57,7 @@ video {
       font-weight: 500;
       font-size: 15px;
 }
+
 
 
 
@@ -188,3 +196,52 @@ video {
   
 
 
+
+
+
+  // drag and drop code
+  .drag-drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .drag-drop-text {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .drag-drop:hover {
+    border-color: #aaa;
+  }
+  
+  .drag-drop:active {
+    border-color: #888;
+  }
+  
+  .uploaded-files {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .uploaded-files > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .uploaded-files > div > span {
+    margin-right: 10px;
+  }
